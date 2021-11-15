@@ -1,0 +1,1 @@
+python bs.py +s %1
