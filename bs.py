@@ -46,6 +46,18 @@ elif(sys.argv[1] == "b"):
 elif(sys.argv[1] == "r"):
 	os.chdir(data["out"][:data["out"].rfind("/")+1])
 	os.system(data["out"][data["out"].rfind("/")+1:])
+elif(sys.argv[1] == "c"):
+	if os.path.exists(data["out"]):
+		os.remove(data["out"])
+		print("Removed: \"" + data["out"] + "\".")
+	else:
+		print("Executable deleted already. :D")
+	
+	os.chdir("./obj/")
+	for filename in os.listdir(os.getcwd()):
+		if(filename[filename.rfind("."):] == ".obj"):
+			os.remove(filename)
+			print("Removed: \"./obj/" + filename + "\".")
 
 if(bs_mod):
 	print(data)
