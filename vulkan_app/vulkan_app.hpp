@@ -22,6 +22,7 @@ private:
 
 	void create_instance();
 
+	bool is_device_compatible(VkPhysicalDevice device);
 	void pick_physical_device();
 
 	std::vector<const char*> getRequiredExtensions();
@@ -44,6 +45,8 @@ private:
 
 	VkDebugUtilsMessengerEXT debugMessenger;
 	// -- DEBUG - END
+
+	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
 	GLFWwindow*	window;
 	VkInstance	instance;

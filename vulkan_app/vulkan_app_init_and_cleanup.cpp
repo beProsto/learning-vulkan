@@ -76,6 +76,58 @@ std::vector<const char*> vulkan_app::getRequiredExtensions() {
 	return extensions;
 }
 
+// Checks if the found GPU is compatible with our needs 
+bool vulkan_app::is_device_compatible(VkPhysicalDevice device) {
+	// Get the device's properties (name, type, supported Vulkan version, etc)
+	VkPhysicalDeviceProperties deviceProperties;
+	vkGetPhysicalDeviceProperties(device, &deviceProperties);
+	// Get the device's features (multi-viewport rendering, 64 bit floats, texture compression, etc)
+	VkPhysicalDeviceFeatures deviceFeatures;
+	vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+	// Only if we have a geometry shader can we be sure everything works ar expected
+	return deviceFeatures.geometryShader;
+}
+// Finds every GPU, and picks the first compatible one
+void vulkan_app::pick_physical_device()
+{
+	// Check the number of available GPU's
+	uint32_t deviceCount = 0;
+	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+	// Error if no found
+	if(deviceCount == 0) {
+		std::cerr << "No vulkan compatible GPU's found.\n";
+		_ASSERT(false);
+	}
+
+	// Make a list of all of the available GPU's
+	std::vector<VkPhysicalDevice> devices(deviceCount);
+	// Fill the list
+	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+
+	std::cout << "There " << (deviceCount == 1 ? "is " : "are ") << deviceCount << " physical device" << (deviceCount == 1 ? "" : "s") << " installed.\n";
+
+	// Check every GPU in the list of all available ones to rule out the first one that matches our expectations
+	for(const VkPhysicalDevice& device : devices) {
+		if(is_device_compatible(device)) {
+			physicalDevice = device;
+			break;
+		}
+	}
+
+	// If we found none, we break lol
+	if(physicalDevice == VK_NULL_HANDLE) {
+		std::cerr << "None of the GPU's found are suitable for this application.\n";
+		_ASSERT(false);
+	}
+
+	// Fetches the currently chosen GPU's properties
+	VkPhysicalDeviceProperties deviceProperties;
+	vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+	// Displays it's vendor name and such
+	std::cout << "The chosen GPU's name is: " << deviceProperties.deviceName << "! :D\n"; 
+}
+
 void vulkan_app::create_instance()
 {
 	if(enableValidationLayers && !check_validation_layer_support()) {
@@ -220,9 +272,3 @@ VKAPI_ATTR VkBool32 VKAPI_CALL vulkan_app::debug_callback(
 	return VK_FALSE;
 }
 // -- DEBUG - END
-
-void vulkan_app::pick_physical_device()
-{
-	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-	
-}
