@@ -119,15 +119,22 @@ void vulkan_app::create_instance()
 	createInfo.ppEnabledExtensionNames = glfwExtensions.data();
 
 	// If we want the debug - validation layers
+	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 	if(enableValidationLayers) {
 		// We tell the instance's creation information know how many validation layers we want
 		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 		// And which ones to be exact
 		createInfo.ppEnabledLayerNames = validationLayers.data();
+		
+		// We tell our instance's create info to also create a Debug Util Messenger (it's an additional one, it will be used when the first one's not available).
+		fill_debug_utils_messenger_create_info(debugCreateInfo);
+		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
 	}
 	else {
 		// If we don't want em, we just tell it to not bother
 		createInfo.enabledLayerCount = 0;
+
+		createInfo.pNext = nullptr;
 	}
 
 	// Creates the instance using the creation info
@@ -172,12 +179,8 @@ bool vulkan_app::check_validation_layer_support()
 	return true;
 }
 
-void vulkan_app::setup_debug_messenger()
+void vulkan_app::fill_debug_utils_messenger_create_info(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 {
-	if(!enableValidationLayers) return;
-
-	// We're going to need creation information for our debug messenger
-	VkDebugUtilsMessengerCreateInfoEXT createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT; // Just as sometime earlier, this ensures the API it's dealing with the correct struct
 	// We define which messages to accept (forward to our debug callback)
 	createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
@@ -185,6 +188,14 @@ void vulkan_app::setup_debug_messenger()
 	// Defines the callback we'd like to use
 	createInfo.pfnUserCallback = debug_callback;
 	createInfo.pUserData = nullptr; // Optional
+}
+void vulkan_app::setup_debug_messenger()
+{
+	if(!enableValidationLayers) return;
+
+	// We're going to need creation information for our debug messenger
+	VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+	fill_debug_utils_messenger_create_info(createInfo);
 
 	// Actually create the messenger, using the data
 	if(vk_ext::CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {

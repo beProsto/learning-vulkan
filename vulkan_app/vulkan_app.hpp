@@ -26,16 +26,14 @@ private:
 
 	// -- DEBUG - VULKAN VALIDATION LAYERS
 	bool check_validation_layer_support();
-	
+	void fill_debug_utils_messenger_create_info(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 	void setup_debug_messenger();
-public:
 	static VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
 		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 		void* pUserData
 	);
-private:
 	const std::vector<const char*> validationLayers = {
 		"VK_LAYER_KHRONOS_validation"
 	};
