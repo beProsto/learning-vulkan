@@ -49,6 +49,8 @@ void vulkan_app::init_vulkan()
 	create_instance();
 
 	setup_debug_messenger();
+
+	pick_physical_device();
 }
 void vulkan_app::clean_vulkan()
 {
@@ -218,3 +220,9 @@ VKAPI_ATTR VkBool32 VKAPI_CALL vulkan_app::debug_callback(
 	return VK_FALSE;
 }
 // -- DEBUG - END
+
+void vulkan_app::pick_physical_device()
+{
+	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+	
+}

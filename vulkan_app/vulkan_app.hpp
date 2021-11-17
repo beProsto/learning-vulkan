@@ -22,6 +22,8 @@ private:
 
 	void create_instance();
 
+	void pick_physical_device();
+
 	std::vector<const char*> getRequiredExtensions();
 
 	// -- DEBUG - VULKAN VALIDATION LAYERS
