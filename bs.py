@@ -18,7 +18,7 @@ elif(sys.argv[1] == "+s"):
 	bs_mod = True
 elif(sys.argv[1] == "b"):
 	bgn = "vsdevcmd -arch=x64 & cl"
-	end = " -o ." + data["out"] + " /std:" + data["std"] + " /EHsc"
+	end = " -o ." + data["out"] + " /std:" + data["std"] + " /EHsc /DebugExe"
 
 	inc = ""
 	for include in data["incl"]:
