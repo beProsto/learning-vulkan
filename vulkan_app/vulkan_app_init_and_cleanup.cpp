@@ -76,6 +76,40 @@ std::vector<const char*> vulkan_app::getRequiredExtensions() {
 	return extensions;
 }
 
+// Checks the available queue families
+vulkan_app::queue_family_indices vulkan_app::find_queue_families(VkPhysicalDevice device)
+{
+	vulkan_app::queue_family_indices queueFamInds;
+
+	// TEST
+	if(enableValidationLayers) {
+		std::cout << "\nqueue fam inds before looking:\n" << queueFamInds.debug_unwrap() << "\n";
+	}
+
+	// Get all the queue families' properties
+	uint32_t queueFamilyCount = 0;
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+	// iterate through the properties looking for their graphics families
+	int i = 0; 
+	for(const VkQueueFamilyProperties& queueFamilyProperties : queueFamilies) {
+		if(queueFamilyProperties.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+			queueFamInds.graphics_family_index = i;
+			queueFamInds.found_graphics_family = true;
+		}
+		i++;
+	}
+
+	// TEST
+	if(enableValidationLayers) {
+		std::cout << "queue fam inds after looking:\n" << queueFamInds.debug_unwrap() << "\n";
+	}
+
+	return queueFamInds;
+}
 // Checks if the found GPU is compatible with our needs 
 bool vulkan_app::is_device_compatible(VkPhysicalDevice device) {
 	// Get the device's properties (name, type, supported Vulkan version, etc)
@@ -84,6 +118,8 @@ bool vulkan_app::is_device_compatible(VkPhysicalDevice device) {
 	// Get the device's features (multi-viewport rendering, 64 bit floats, texture compression, etc)
 	VkPhysicalDeviceFeatures deviceFeatures;
 	vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+	// Get the device's available queue families
+	vulkan_app::queue_family_indices queueFamInds = find_queue_families(device);
 
 	// Only if we have a geometry shader can we be sure everything works ar expected
 	return deviceFeatures.geometryShader;

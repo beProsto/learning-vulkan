@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 
 #include <vector>
+#include <string>
+#include "macro/debug_unwrap.hpp"
 
 class vulkan_app
 {
@@ -12,6 +14,7 @@ public:
 	~vulkan_app();
 
 	void begin();
+
 
 private:
 	void init_window();
@@ -25,6 +28,23 @@ private:
 	bool is_device_compatible(VkPhysicalDevice device);
 	void pick_physical_device();
 
+public:
+	struct queue_family_indices
+	{
+		bool found_graphics_family = false;
+		uint32_t graphics_family_index = 0;
+
+		MAKE_DEBUG_UNWRAP(
+			found_graphics_family, 
+			graphics_family_index
+		);
+	};
+
+private:
+	queue_family_indices find_queue_families(VkPhysicalDevice device);
+
+
+private:
 	std::vector<const char*> getRequiredExtensions();
 
 	// -- DEBUG - VULKAN VALIDATION LAYERS
