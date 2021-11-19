@@ -79,9 +79,10 @@ std::vector<const char*> vulkan_app::getRequiredExtensions() {
 // Checks the available queue families
 vulkan_app::queue_family_indices vulkan_app::find_queue_families(VkPhysicalDevice device)
 {
+	// We want to find every queue family, and their indices
 	vulkan_app::queue_family_indices queueFamInds;
 
-	// TEST
+	// DEBUG - DISPLAYS ALL THE VALUES
 	if(enableValidationLayers) {
 		std::cout << "\nqueue fam inds before looking:\n" << queueFamInds.debug_unwrap() << "\n";
 	}
@@ -103,7 +104,7 @@ vulkan_app::queue_family_indices vulkan_app::find_queue_families(VkPhysicalDevic
 		i++;
 	}
 
-	// TEST
+	// DEBUG - DISPLAYS ALL THE VALUES
 	if(enableValidationLayers) {
 		std::cout << "queue fam inds after looking:\n" << queueFamInds.debug_unwrap() << "\n";
 	}
@@ -121,8 +122,8 @@ bool vulkan_app::is_device_compatible(VkPhysicalDevice device) {
 	// Get the device's available queue families
 	vulkan_app::queue_family_indices queueFamInds = find_queue_families(device);
 
-	// Only if we have a geometry shader can we be sure everything works ar expected
-	return deviceFeatures.geometryShader;
+	// Only if we have a geometry shader and that all the needed queue's were found can we be sure everything works ar expected
+	return deviceFeatures.geometryShader && queueFamInds.is_okay();
 }
 // Finds every GPU, and picks the first compatible one
 void vulkan_app::pick_physical_device()

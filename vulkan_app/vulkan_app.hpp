@@ -34,6 +34,10 @@ public:
 		bool found_graphics_family = false;
 		uint32_t graphics_family_index = 0;
 
+		bool is_okay() {
+			return found_graphics_family;
+		}
+
 		MAKE_DEBUG_UNWRAP(
 			found_graphics_family, 
 			graphics_family_index
