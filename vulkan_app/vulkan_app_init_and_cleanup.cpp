@@ -51,6 +51,8 @@ void vulkan_app::init_vulkan()
 	setup_debug_messenger();
 
 	pick_physical_device();
+
+	create_logical_device();
 }
 void vulkan_app::clean_vulkan()
 {
@@ -242,6 +244,11 @@ void vulkan_app::create_instance()
 		std::cout << "VkInstance created succesfully!\n";
 	}
 }
+
+void vulkan_app::create_logical_device() {
+	
+}
+
 
 // -- DEBUG - VULKAN VALIDATION LAYERS
 bool vulkan_app::check_validation_layer_support() 

@@ -28,6 +28,8 @@ private:
 	bool is_device_compatible(VkPhysicalDevice device);
 	void pick_physical_device();
 
+	void create_logical_device();
+
 public:
 	struct queue_family_indices
 	{
@@ -71,6 +73,7 @@ private:
 	// -- DEBUG - END
 
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+	VkDevice device;
 
 	GLFWwindow*	window;
 	VkInstance	instance;
