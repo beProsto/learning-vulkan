@@ -101,6 +101,11 @@ vulkan_app::queue_family_indices vulkan_app::find_queue_families(VkPhysicalDevic
 			queueFamInds.graphics_family_index = i;
 			queueFamInds.found_graphics_family = true;
 		}
+
+		if(queueFamInds.is_okay()) {
+			break;
+		}
+
 		i++;
 	}
 
