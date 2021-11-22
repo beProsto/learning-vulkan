@@ -74,6 +74,7 @@ private:
 
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	VkDevice device;
+	VkQueue graphicsQueue;
 
 	GLFWwindow*	window;
 	VkInstance	instance;

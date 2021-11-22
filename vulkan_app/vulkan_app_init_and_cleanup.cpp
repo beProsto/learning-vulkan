@@ -56,6 +56,8 @@ void vulkan_app::init_vulkan()
 }
 void vulkan_app::clean_vulkan()
 {
+	vkDestroyDevice(device, nullptr);
+
 	if(enableValidationLayers) {
 		vk_ext::DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
 	}
@@ -245,8 +247,53 @@ void vulkan_app::create_instance()
 	}
 }
 
+// Creates a VkDevice
 void vulkan_app::create_logical_device() {
-	
+	// we find all the queue families we need
+	queue_family_indices indices = find_queue_families(physicalDevice);
+
+	// we create one of em needed queues (first we define it's data)
+	VkDeviceQueueCreateInfo queueCreateInfo{};
+	queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	queueCreateInfo.queueFamilyIndex = indices.graphics_family_index;
+	queueCreateInfo.queueCount = 1;
+	// we assign our queue it's priority, 1.0 means the highest
+	float queuePriority = 1.0f;
+	queueCreateInfo.pQueuePriorities = &queuePriority; // i don't think this is safe at all - queuePriority could be well gone when the gpu tries to get it's value from a pointer :/
+
+	// we specify the device features we want (geometry shaders for instance)
+	VkPhysicalDeviceFeatures deviceFeatures{};
+
+	// the actual create info for the device
+	VkDeviceCreateInfo createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	// we tell it about the queues we wanted to create also
+	createInfo.pQueueCreateInfos = &queueCreateInfo;
+	createInfo.queueCreateInfoCount = 1;
+	// we tell it about the device features we want (geometry shaders etc...)
+	createInfo.pEnabledFeatures = &deviceFeatures;
+
+	// we don't have to anymore, these will simply be derived from the instance
+	// however we'll still do it for the sake of support
+	createInfo.enabledExtensionCount = 0;
+	if (enableValidationLayers) {
+		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+		createInfo.ppEnabledLayerNames = validationLayers.data();
+	} else {
+		createInfo.enabledLayerCount = 0;
+	}
+
+	// actually creates the logical device!
+	if(vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
+    	std::cerr << "couldn't create a logical device!\n";
+		_ASSERT(false);
+	}
+	else {
+		std::cout << "created a logical device successfully\n";
+	}
+
+	// sets graphicsQueue as a handle to the graphics queue in our logical device :p
+	vkGetDeviceQueue(device, indices.graphics_family_index, 0, &graphicsQueue);
 }
 
 
