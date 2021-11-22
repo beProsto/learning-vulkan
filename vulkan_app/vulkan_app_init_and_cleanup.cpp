@@ -50,6 +50,8 @@ void vulkan_app::init_vulkan()
 
 	setup_debug_messenger();
 
+	create_surface();
+
 	pick_physical_device();
 
 	create_logical_device();
@@ -62,11 +64,14 @@ void vulkan_app::clean_vulkan()
 		vk_ext::DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
 	}
 
+	vkDestroySurfaceKHR(instance, surface, nullptr);
+
     vkDestroyInstance(instance, nullptr);
 }
 
 // Fetches the extensions required by glfw, and adds another, special one to them, if debugging is enabled 
-std::vector<const char*> vulkan_app::getRequiredExtensions() {
+std::vector<const char*> vulkan_app::getRequiredExtensions()
+{
 	uint32_t glfwExtensionCount = 0;
 	const char** glfwExtensions;
 	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -101,11 +106,21 @@ vulkan_app::queue_family_indices vulkan_app::find_queue_families(VkPhysicalDevic
 	// iterate through the properties looking for their graphics families
 	int i = 0; 
 	for(const VkQueueFamilyProperties& queueFamilyProperties : queueFamilies) {
+		// We check for the graphics family
 		if(queueFamilyProperties.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
 			queueFamInds.graphics_family_index = i;
 			queueFamInds.found_graphics_family = true;
 		}
 
+		// We check for the presentation family
+		VkBool32 presentSupport = false;
+		vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+		if(presentSupport) {
+			queueFamInds.present_family_index = i;
+			queueFamInds.found_present_family = true;
+		}
+
+		// breaks the loop if all needed families have been found
 		if(queueFamInds.is_okay()) {
 			break;
 		}
@@ -121,7 +136,8 @@ vulkan_app::queue_family_indices vulkan_app::find_queue_families(VkPhysicalDevic
 	return queueFamInds;
 }
 // Checks if the found GPU is compatible with our needs 
-bool vulkan_app::is_device_compatible(VkPhysicalDevice device) {
+bool vulkan_app::is_device_compatible(VkPhysicalDevice device)
+{
 	// Get the device's properties (name, type, supported Vulkan version, etc)
 	VkPhysicalDeviceProperties deviceProperties;
 	vkGetPhysicalDeviceProperties(device, &deviceProperties);
@@ -248,7 +264,8 @@ void vulkan_app::create_instance()
 }
 
 // Creates a VkDevice
-void vulkan_app::create_logical_device() {
+void vulkan_app::create_logical_device()
+{
 	// we find all the queue families we need
 	queue_family_indices indices = find_queue_families(physicalDevice);
 
@@ -294,6 +311,20 @@ void vulkan_app::create_logical_device() {
 
 	// sets graphicsQueue as a handle to the graphics queue in our logical device :p
 	vkGetDeviceQueue(device, indices.graphics_family_index, 0, &graphicsQueue);
+}
+
+void vulkan_app::create_surface()
+{
+	// creates a VkSurfaceKHR based on the window
+	// it's implementation isn't OS agnostic
+	// gonna have to get 'em working in OWL and all that lol
+	if(glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
+		std::cerr << "failed to create window surface!\n";
+		_ASSERT(false);
+	}
+	else {
+		std::cout << "created a surface successfully!\n";
+	}
 }
 
 

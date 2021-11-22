@@ -29,6 +29,7 @@ private:
 	void pick_physical_device();
 
 	void create_logical_device();
+	void create_surface();
 
 public:
 	struct queue_family_indices
@@ -36,13 +37,18 @@ public:
 		bool found_graphics_family = false;
 		uint32_t graphics_family_index = 0;
 
+		bool found_present_family = false;
+		uint32_t present_family_index = 0;
+
 		bool is_okay() {
-			return found_graphics_family;
+			return found_graphics_family && found_present_family;
 		}
 
 		MAKE_DEBUG_UNWRAP(
 			found_graphics_family, 
-			graphics_family_index
+			graphics_family_index,
+			found_present_family,
+			present_family_index
 		);
 	};
 
@@ -72,10 +78,18 @@ private:
 	VkDebugUtilsMessengerEXT debugMessenger;
 	// -- DEBUG - END
 
+	// The picked GPU
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+	// The logical device
 	VkDevice device;
+	// The graphics queue - regards graphics operations
 	VkQueue graphicsQueue;
+	// The surface - the canvas for us to draw upon
+	VkSurfaceKHR surface;
 
+
+	// The window
 	GLFWwindow*	window;
+	// The Vulkan instance - it will be used to do anything regarding the Vulkan API
 	VkInstance	instance;
 };
