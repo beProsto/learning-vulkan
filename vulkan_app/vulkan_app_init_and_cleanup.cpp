@@ -295,7 +295,7 @@ void vulkan_app::create_logical_device() {
 	// sets graphicsQueue as a handle to the graphics queue in our logical device :p
 	vkGetDeviceQueue(device, indices.graphics_family_index, 0, &graphicsQueue);
 }
- 
+
 
 // -- DEBUG - VULKAN VALIDATION LAYERS
 bool vulkan_app::check_validation_layer_support() 
