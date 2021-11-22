@@ -25,11 +25,23 @@ private:
 
 	void create_instance();
 
+	const std::vector<const char*> deviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
+	bool check_device_extension_support(VkPhysicalDevice device);
+
 	bool is_device_compatible(VkPhysicalDevice device);
 	void pick_physical_device();
 
 	void create_logical_device();
 	void create_surface();
+
+	struct SwapChainSupportDetails {
+		VkSurfaceCapabilitiesKHR capabilities;
+		std::vector<VkSurfaceFormatKHR> formats;
+		std::vector<VkPresentModeKHR> presentModes;
+	};
+	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 
 public:
 	struct queue_family_indices
