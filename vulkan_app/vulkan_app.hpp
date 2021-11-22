@@ -84,6 +84,8 @@ private:
 	VkDevice device;
 	// The graphics queue - regards graphics operations
 	VkQueue graphicsQueue;
+	// The present queue - regards displaying said graphics
+	VkQueue presentQueue;
 	// The surface - the canvas for us to draw upon
 	VkSurfaceKHR surface;
 

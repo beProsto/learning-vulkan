@@ -266,17 +266,33 @@ void vulkan_app::create_instance()
 // Creates a VkDevice
 void vulkan_app::create_logical_device()
 {
+	float queuePriority = 1.0f;
+
+	const uint32_t QUEUE_FAMILIES_COUNT = 2;
+
 	// we find all the queue families we need
 	queue_family_indices indices = find_queue_families(physicalDevice);
 
 	// we create one of em needed queues (first we define it's data)
-	VkDeviceQueueCreateInfo queueCreateInfo{};
-	queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-	queueCreateInfo.queueFamilyIndex = indices.graphics_family_index;
-	queueCreateInfo.queueCount = 1;
+	VkDeviceQueueCreateInfo graphicsQueueCreateInfo{};
+	graphicsQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	graphicsQueueCreateInfo.queueFamilyIndex = indices.graphics_family_index;
+	graphicsQueueCreateInfo.queueCount = 1;
 	// we assign our queue it's priority, 1.0 means the highest
-	float queuePriority = 1.0f;
-	queueCreateInfo.pQueuePriorities = &queuePriority; // i don't think this is safe at all - queuePriority could be well gone when the gpu tries to get it's value from a pointer :/
+	graphicsQueueCreateInfo.pQueuePriorities = &queuePriority; // i don't think this is safe at all - queuePriority could be well gone when the gpu tries to get it's value from a pointer :/
+
+	// we create the second one of em needed queues (same thing rly)
+	VkDeviceQueueCreateInfo presentQueueCreateInfo{};
+	presentQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	presentQueueCreateInfo.queueFamilyIndex = indices.present_family_index;
+	presentQueueCreateInfo.queueCount = 1;
+	presentQueueCreateInfo.pQueuePriorities = &queuePriority;
+
+	// we want to have an array of 2 queues, as that's how much we have
+	VkDeviceQueueCreateInfo queueCreateInfos[QUEUE_FAMILIES_COUNT] = {
+		graphicsQueueCreateInfo,
+		presentQueueCreateInfo
+	};
 
 	// we specify the device features we want (geometry shaders for instance)
 	VkPhysicalDeviceFeatures deviceFeatures{};
@@ -285,8 +301,8 @@ void vulkan_app::create_logical_device()
 	VkDeviceCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	// we tell it about the queues we wanted to create also
-	createInfo.pQueueCreateInfos = &queueCreateInfo;
-	createInfo.queueCreateInfoCount = 1;
+	createInfo.pQueueCreateInfos = &queueCreateInfos[0];
+	createInfo.queueCreateInfoCount = QUEUE_FAMILIES_COUNT;
 	// we tell it about the device features we want (geometry shaders etc...)
 	createInfo.pEnabledFeatures = &deviceFeatures;
 
@@ -311,6 +327,10 @@ void vulkan_app::create_logical_device()
 
 	// sets graphicsQueue as a handle to the graphics queue in our logical device :p
 	vkGetDeviceQueue(device, indices.graphics_family_index, 0, &graphicsQueue);
+	// sets presentQueue as a handle to the present queue in our logical device :p
+	vkGetDeviceQueue(device, indices.present_family_index, 0, &presentQueue);
+
+	std::cout << "got em queues\n";
 }
 
 void vulkan_app::create_surface()
