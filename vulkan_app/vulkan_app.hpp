@@ -108,8 +108,13 @@ private:
 	VkQueue presentQueue;
 	// The surface - the canvas for us to draw upon
 	VkSurfaceKHR surface;
-	// SwapChain
+	// The a 'SwapChain
 	VkSwapchainKHR swapChain;
+	VkFormat swapChainImageFormat;
+	VkExtent2D swapChainExtent;
+	// The images provided by the swap chain
+	std::vector<VkImage> swapChainImages;
+
 
 	// The window
 	GLFWwindow*	window;

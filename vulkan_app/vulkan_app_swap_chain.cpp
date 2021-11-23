@@ -70,6 +70,15 @@ void vulkan_app::create_swap_chain()
 		std::cerr << "Failed to create the SwapChain!\n";
 		_ASSERT(false);
 	}
+
+	// Get all of the handles to the images the swap chain has created
+	vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
+	swapChainImages.resize(imageCount);
+	vkGetSwapchainImagesKHR(device, swapChain, &imageCount, swapChainImages.data());
+
+	// Remember these funky variables for later:
+	swapChainImageFormat = surfaceFormat.format;
+	swapChainExtent = extent;
 }
 void vulkan_app::clean_swap_chain()
 {
