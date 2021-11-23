@@ -27,10 +27,12 @@ void vulkan_app::init_vulkan()
 
 	create_logical_device();
 
-	init_swap_chain();
+	create_swap_chain();
 }
 void vulkan_app::clean_vulkan()
 {
+	clean_swap_chain();
+
 	vkDestroyDevice(device, nullptr);
 
 	clean_debug_messenger();

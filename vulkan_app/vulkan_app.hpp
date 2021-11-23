@@ -72,7 +72,8 @@ private:
 	VkPresentModeKHR choose_swap_present_mode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 	VkExtent2D choose_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities);
 
-	void init_swap_chain();
+	void create_swap_chain();
+	void clean_swap_chain();
 
 private:
 	std::vector<const char*> getRequiredExtensions();
@@ -107,7 +108,8 @@ private:
 	VkQueue presentQueue;
 	// The surface - the canvas for us to draw upon
 	VkSurfaceKHR surface;
-
+	// SwapChain
+	VkSwapchainKHR swapChain;
 
 	// The window
 	GLFWwindow*	window;
