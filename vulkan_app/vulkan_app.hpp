@@ -75,6 +75,7 @@ private:
 	bool check_validation_layer_support();
 	void fill_debug_utils_messenger_create_info(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 	void setup_debug_messenger();
+	void clean_debug_messenger();
 	static VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,

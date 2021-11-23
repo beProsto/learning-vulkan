@@ -11,3 +11,5 @@ To run:
 1. ./build
 2. ./run
 
+Alternatively:
+`./compile_and_run`
