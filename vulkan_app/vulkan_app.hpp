@@ -41,7 +41,7 @@ private:
 		std::vector<VkSurfaceFormatKHR> formats;
 		std::vector<VkPresentModeKHR> presentModes;
 	};
-	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+	SwapChainSupportDetails query_swap_chain_support(VkPhysicalDevice device);
 
 public:
 	struct queue_family_indices
@@ -67,6 +67,12 @@ public:
 private:
 	queue_family_indices find_queue_families(VkPhysicalDevice device);
 
+	/// SWAP CHAIN
+	VkSurfaceFormatKHR choose_swap_surface_format(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+	VkPresentModeKHR choose_swap_present_mode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+	VkExtent2D choose_swap_extent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+	void init_swap_chain();
 
 private:
 	std::vector<const char*> getRequiredExtensions();

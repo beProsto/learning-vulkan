@@ -26,6 +26,8 @@ void vulkan_app::init_vulkan()
 	pick_physical_device();
 
 	create_logical_device();
+
+	init_swap_chain();
 }
 void vulkan_app::clean_vulkan()
 {

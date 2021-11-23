@@ -32,7 +32,7 @@ bool vulkan_app::check_device_extension_support(VkPhysicalDevice device)
 	return requiredExtensions.empty();
 }
 // gets the details of the swapchain support
-vulkan_app::SwapChainSupportDetails vulkan_app::querySwapChainSupport(VkPhysicalDevice device)
+vulkan_app::SwapChainSupportDetails vulkan_app::query_swap_chain_support(VkPhysicalDevice device)
 {
 	SwapChainSupportDetails details;
 
@@ -76,7 +76,7 @@ bool vulkan_app::is_device_compatible(VkPhysicalDevice device)
 	bool swapChainAdequate = false;
 	if(extensionsSupported) {
 		// finds the details of our swap chain
-		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+		SwapChainSupportDetails swapChainSupport = query_swap_chain_support(device);
 		// the swap chain is adequate if some formats and some present modes were found
 		swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 	}
