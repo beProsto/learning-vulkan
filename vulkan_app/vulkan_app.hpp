@@ -75,6 +75,9 @@ private:
 	void create_swap_chain();
 	void clean_swap_chain();
 
+	void create_image_views();
+	void clean_image_views();
+
 private:
 	std::vector<const char*> getRequiredExtensions();
 
@@ -114,7 +117,8 @@ private:
 	VkExtent2D swapChainExtent;
 	// The images provided by the swap chain
 	std::vector<VkImage> swapChainImages;
-
+	// The images' views - these will mark the area of the images that shall be written to
+	std::vector<VkImageView> swapChainImageViews;
 
 	// The window
 	GLFWwindow*	window;
