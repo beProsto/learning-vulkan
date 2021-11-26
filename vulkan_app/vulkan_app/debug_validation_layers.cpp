@@ -1,4 +1,4 @@
-#include "vulkan_app.hpp"
+#include "../vulkan_app.hpp"
 
 #include <iostream>
 
@@ -6,7 +6,7 @@
 #include <GLFW/glfw3.h>
 
 // Add functions from extensions
-#include "vk_ext/all.hpp"
+#include "../vk_ext/all.hpp"
 
 // -- DEBUG - VULKAN VALIDATION LAYERS
 bool vulkan_app::check_validation_layer_support() 
