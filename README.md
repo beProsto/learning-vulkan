@@ -8,8 +8,4 @@ It may still not work though!
 I guess this whole thing is just a mental "note to self".
 
 To run:
-1. ./build
-2. ./run
-
-Alternatively:
 `./compile_and_run`
