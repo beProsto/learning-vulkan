@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-VkShaderModule createSubShader(const std::string& _code);
+VkShaderModule createSubShaderModule(const std::string& _code, VkDevice _device);
 
 // We create our graphics pipeline
 void vulkan_app::create_pipeline()
@@ -16,10 +16,31 @@ void vulkan_app::create_pipeline()
 	std::string fragmentShaderCode = readFile("./triangle_f.spv");
 
 	std::cout << "\nVERT SHADER CODE SIZE: " << vertexShaderCode.size() << "\nFRAG SHADER CODE SIZE: " << fragmentShaderCode.size() << "\n";
+
+	VkShaderModule vertexShaderMod = createSubShaderModule(vertexShaderCode, device);
+	VkShaderModule fragmentShaderMod = createSubShaderModule(fragmentShaderCode, device);
+
+	// code lol
+
+	vkDestroyShaderModule(device, fragmentShaderMod, nullptr);
+	vkDestroyShaderModule(device, vertexShaderMod, nullptr);
 }
 
 // Shader Module Creation (sub shaders / shaders in opengl)
-VkShaderModule createSubShader(const std::string& _code)
+VkShaderModule createSubShaderModule(const std::string& _code, VkDevice _device)
 {
-	return VkShaderModule{};
+	VkShaderModuleCreateInfo createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+	createInfo.codeSize = _code.size();
+	createInfo.pCode = (uint32_t*)_code.data();
+	
+	VkShaderModule subshader;
+	if(vkCreateShaderModule(_device, &createInfo, nullptr, &subshader) != VK_SUCCESS) {
+		std::cerr << "Couldn't create a subshader!\n";
+		_ASSERT(false);
+	}
+	
+	std::cout << "Created a subshader.\n";
+
+	return subshader;
 }
