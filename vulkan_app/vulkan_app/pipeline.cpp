@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-VkShaderModule createSubShaderModule(const std::string& _code, VkDevice _device);
+VkShaderModule createShaderModule(const std::string& _code, VkDevice _device);
 
 // We create our graphics pipeline
 void vulkan_app::create_pipeline()
@@ -17,8 +17,8 @@ void vulkan_app::create_pipeline()
 
 	std::cout << "\nVERT SHADER CODE SIZE: " << vertexShaderCode.size() << "\nFRAG SHADER CODE SIZE: " << fragmentShaderCode.size() << "\n";
 
-	VkShaderModule vertexShaderMod = createSubShaderModule(vertexShaderCode, device);
-	VkShaderModule fragmentShaderMod = createSubShaderModule(fragmentShaderCode, device);
+	VkShaderModule vertexShaderMod = createShaderModule(vertexShaderCode, device);
+	VkShaderModule fragmentShaderMod = createShaderModule(fragmentShaderCode, device);
 
 	// code lol
 
@@ -27,7 +27,7 @@ void vulkan_app::create_pipeline()
 }
 
 // Shader Module Creation (sub shaders / shaders in opengl)
-VkShaderModule createSubShaderModule(const std::string& _code, VkDevice _device)
+VkShaderModule createShaderModule(const std::string& _code, VkDevice _device)
 {
 	VkShaderModuleCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
