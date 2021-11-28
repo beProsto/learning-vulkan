@@ -18,30 +18,20 @@ vulkan_app::~vulkan_app()
 void vulkan_app::init_vulkan()
 {
 	create_instance();
-
 	setup_debug_messenger();
-
 	create_surface();
-
 	pick_physical_device();
-
 	create_logical_device();
-
 	create_swap_chain();
-
 	create_image_views();
+	create_pipeline();
 }
 void vulkan_app::clean_vulkan()
 {
 	clean_image_views();
-
 	clean_swap_chain();
-
 	vkDestroyDevice(device, nullptr);
-
 	clean_debug_messenger();
-
 	vkDestroySurfaceKHR(instance, surface, nullptr);
-
     vkDestroyInstance(instance, nullptr);
 }

@@ -78,6 +78,8 @@ private:
 	void create_image_views();
 	void clean_image_views();
 
+	void create_pipeline();
+
 private:
 	std::vector<const char*> getRequiredExtensions();
 
