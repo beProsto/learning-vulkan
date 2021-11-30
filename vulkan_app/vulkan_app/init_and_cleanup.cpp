@@ -28,6 +28,7 @@ void vulkan_app::init_vulkan()
 }
 void vulkan_app::clean_vulkan()
 {
+	clean_pipeline();
 	clean_image_views();
 	clean_swap_chain();
 	vkDestroyDevice(device, nullptr);

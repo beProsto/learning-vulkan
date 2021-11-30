@@ -79,6 +79,7 @@ private:
 	void clean_image_views();
 
 	void create_pipeline();
+	void clean_pipeline();
 
 private:
 	std::vector<const char*> getRequiredExtensions();
@@ -122,6 +123,9 @@ private:
 	// The images' views - these will mark the area of the images that shall be written to
 	std::vector<VkImageView> swapChainImageViews;
 
+	// The pipeline layout
+	VkPipelineLayout pipelineLayout;
+	
 	// The window
 	GLFWwindow*	window;
 	// The Vulkan instance - it will be used to do anything regarding the Vulkan API
