@@ -24,11 +24,13 @@ void vulkan_app::init_vulkan()
 	create_logical_device();
 	create_swap_chain();
 	create_image_views();
+	create_render_pass();
 	create_pipeline();
 }
 void vulkan_app::clean_vulkan()
 {
 	clean_pipeline();
+	clean_render_pass();
 	clean_image_views();
 	clean_swap_chain();
 	vkDestroyDevice(device, nullptr);

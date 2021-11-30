@@ -81,6 +81,9 @@ private:
 	void create_pipeline();
 	void clean_pipeline();
 
+	void create_render_pass();
+	void clean_render_pass();
+
 private:
 	std::vector<const char*> getRequiredExtensions();
 
@@ -124,6 +127,7 @@ private:
 	std::vector<VkImageView> swapChainImageViews;
 
 	// The pipeline layout
+	VkRenderPass renderPass;
 	VkPipelineLayout pipelineLayout;
 	
 	// The window
