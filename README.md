@@ -11,8 +11,8 @@ you should most likely reach into the [bs.json](bs.json) file and change `1.2.18
 To build everything and run:
 `./compile_and_run`
 
-Or:
-`compole_and_run.cmd`
+Alternatively:
+`compile_and_run.cmd`
 
 Expected results:
 ![screenshot](screenshot.png)
