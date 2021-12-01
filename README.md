@@ -11,4 +11,4 @@ To run:
 `./compile_and_run`
 
 Expected results:
-[!screenshot](screenshot.png)
+![screenshot](screenshot.png)
