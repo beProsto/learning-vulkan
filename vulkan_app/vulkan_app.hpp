@@ -84,6 +84,14 @@ private:
 	void create_render_pass();
 	void clean_render_pass();
 
+	void create_frame_buffers();
+	void clean_frame_buffers();
+
+	void create_command_pool();
+	void clean_command_pool();
+
+	void create_command_buffers();
+
 private:
 	std::vector<const char*> getRequiredExtensions();
 
@@ -126,11 +134,14 @@ private:
 	// The images' views - these will mark the area of the images that shall be written to
 	std::vector<VkImageView> swapChainImageViews;
 
-	// The pipeline layout
+	// The pipeline
 	VkRenderPass renderPass;
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
-	
+	std::vector<VkFramebuffer> swapChainFramebuffers;
+	VkCommandPool commandPool;
+	std::vector<VkCommandBuffer> commandBuffers;
+
 	// The window
 	GLFWwindow*	window;
 	// The Vulkan instance - it will be used to do anything regarding the Vulkan API

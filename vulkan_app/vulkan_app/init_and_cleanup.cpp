@@ -26,9 +26,14 @@ void vulkan_app::init_vulkan()
 	create_image_views();
 	create_render_pass();
 	create_pipeline();
+	create_frame_buffers();
+	create_command_pool();
+	create_command_buffers();
 }
 void vulkan_app::clean_vulkan()
 {
+	clean_command_pool();
+	clean_frame_buffers();
 	clean_pipeline();
 	clean_render_pass();
 	clean_image_views();

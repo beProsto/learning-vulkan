@@ -114,7 +114,7 @@ void vulkan_app::create_pipeline()
 	colorBlendingCreationInfo.logicOpEnable = VK_FALSE;
 	colorBlendingCreationInfo.logicOp = VK_LOGIC_OP_COPY; // Optional
 	colorBlendingCreationInfo.attachmentCount = 1;
-	colorBlendingCreationInfo.pAttachments = &colorBlendAttachment; // we give it the attachements we just defined
+	colorBlendingCreationInfo.pAttachments = &colorBlendAttachment; // we give it the attachments we just defined
 	colorBlendingCreationInfo.blendConstants[0] = 0.0f; // Optional
 	colorBlendingCreationInfo.blendConstants[1] = 0.0f; // Optional
 	colorBlendingCreationInfo.blendConstants[2] = 0.0f; // Optional
