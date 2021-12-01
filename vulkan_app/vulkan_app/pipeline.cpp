@@ -120,16 +120,6 @@ void vulkan_app::create_pipeline()
 	colorBlendingCreationInfo.blendConstants[2] = 0.0f; // Optional
 	colorBlendingCreationInfo.blendConstants[3] = 0.0f; // Optional
 
-	// Dynamic states - viewport can be dynamic
-	VkDynamicState dynamicStates[] = {
-		VK_DYNAMIC_STATE_VIEWPORT,
-		VK_DYNAMIC_STATE_LINE_WIDTH
-	};
-	VkPipelineDynamicStateCreateInfo dynamicStatesCreationInfo{};
-	dynamicStatesCreationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-	dynamicStatesCreationInfo.dynamicStateCount = 2; // how many
-	dynamicStatesCreationInfo.pDynamicStates = dynamicStates; // pointer to them
-
 	// The pipeline layout defines the uniforms in our shaders
 	VkPipelineLayoutCreateInfo pipelineLayoutCreationInfo{};
 	pipelineLayoutCreationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -146,12 +136,46 @@ void vulkan_app::create_pipeline()
 		std::cout << "Created the pipeline layout.\n";
 	}
 
+	// Pipeline creation - We give the pipeline literally every single thing that we've created up until this point for that purpose - to be used as a part of it
+	VkGraphicsPipelineCreateInfo pipelineCreationInfo{};
+	pipelineCreationInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+
+	pipelineCreationInfo.stageCount = 2; // shader stages count
+	pipelineCreationInfo.pStages = shaderStagesCreationInfos; // a pointer to em
+
+	pipelineCreationInfo.pVertexInputState = &vertexInputCreationInfo;
+	pipelineCreationInfo.pInputAssemblyState = &inputAssemblyCreationInfo;
+	pipelineCreationInfo.pViewportState = &viewportCreationInfo;
+	pipelineCreationInfo.pRasterizationState = &rasterizerCreationInfo;
+	pipelineCreationInfo.pMultisampleState = &multisamplingCreationInfo;
+	pipelineCreationInfo.pDepthStencilState = nullptr; // Optional
+	pipelineCreationInfo.pColorBlendState = &colorBlendingCreationInfo;
+	pipelineCreationInfo.pDynamicState = nullptr; // Optional
+
+	pipelineCreationInfo.layout = pipelineLayout;
+	pipelineCreationInfo.renderPass = renderPass;
+	pipelineCreationInfo.subpass = 0; // the reference to the subpass we'll be using
+
+	// these values are used when we want to create new pipelines only changing a few things relative to another one
+	pipelineCreationInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
+	pipelineCreationInfo.basePipelineIndex = -1; // Optional 
+
+	if(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineCreationInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
+		std::cerr << "Couldn't create the graphics pipeline!\n";
+		_ASSERT(false);
+	}
+	else {
+		std::cout << "Created a graphics pipeline. :D\n";
+	}
+
+
 	// We free the shader modules
 	vkDestroyShaderModule(device, fragmentShaderMod, nullptr);
 	vkDestroyShaderModule(device, vertexShaderMod, nullptr);
 }
 void vulkan_app::clean_pipeline()
 {
+	vkDestroyPipeline(device, graphicsPipeline, nullptr);
 	vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 }
 

@@ -129,6 +129,7 @@ private:
 	// The pipeline layout
 	VkRenderPass renderPass;
 	VkPipelineLayout pipelineLayout;
+	VkPipeline graphicsPipeline;
 	
 	// The window
 	GLFWwindow*	window;
