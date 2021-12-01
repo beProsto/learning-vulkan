@@ -46,7 +46,7 @@ void vulkan_app::create_command_buffers()
 		// every single command buffer corresponds to every single frame buffer possible to be drawn to by it
 		renderPassBeginInfo.renderArea.offset = {0, 0};
 		renderPassBeginInfo.renderArea.extent = swapChainExtent; // setting the correct sizing
-		VkClearValue clearColor = {{{0.3f, 0.4f, 0.9f, 1.0f}}}; // set the colour to clear the screen with - light blue :D
+		VkClearValue clearColor = {{{0.1f, 0.1f, 0.1f, 1.0f}}}; // set the colour to clear the screen with - light blue :D
 		renderPassBeginInfo.clearValueCount = 1;
 		renderPassBeginInfo.pClearValues = &clearColor; // set the clear color to be it
 
