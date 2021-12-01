@@ -56,7 +56,7 @@ void vulkan_app::create_command_buffers()
 		// Bind the pipeline
 		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 		// The draw call
-		vkCmdDraw(commandBuffers[i], 3, 1, 0, 0); // We draw with 3 vertices, cuz we technically have that ammount
+		vkCmdDraw(commandBuffers[i], 6, 1, 0, 0); // We draw with 3 vertices, cuz we technically have that ammount
 
 		// End the render pass
 		vkCmdEndRenderPass(commandBuffers[i]);
