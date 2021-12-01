@@ -29,9 +29,11 @@ void vulkan_app::init_vulkan()
 	create_frame_buffers();
 	create_command_pool();
 	create_command_buffers();
+	create_semaphores();
 }
 void vulkan_app::clean_vulkan()
 {
+	clean_semaphores();
 	clean_command_pool();
 	clean_frame_buffers();
 	clean_pipeline();

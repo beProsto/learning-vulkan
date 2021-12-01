@@ -14,6 +14,7 @@ public:
 	~vulkan_app();
 
 	void begin();
+	void draw();
 
 
 private:
@@ -92,6 +93,9 @@ private:
 
 	void create_command_buffers();
 
+	void create_semaphores();
+	void clean_semaphores();
+
 private:
 	std::vector<const char*> getRequiredExtensions();
 
@@ -139,8 +143,12 @@ private:
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 	std::vector<VkFramebuffer> swapChainFramebuffers;
+	
 	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
+
+	VkSemaphore imageAvailableSemaphore;
+	VkSemaphore renderFinishedSemaphore;
 
 	// The window
 	GLFWwindow*	window;

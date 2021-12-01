@@ -32,6 +32,15 @@ void vulkan_app::create_render_pass()
 	subpass.colorAttachmentCount = 1;
 	subpass.pColorAttachments = &colorAttachmentRef; // we attach the color attachment reference
 
+	// Subpass dependency
+	VkSubpassDependency dependency{};
+	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+	dependency.dstSubpass = 0;
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.srcAccessMask = 0;
+	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
 	// Redner pass creation
 	VkRenderPassCreateInfo renderPassCreationInfo{};
 	renderPassCreationInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -39,6 +48,8 @@ void vulkan_app::create_render_pass()
 	renderPassCreationInfo.pAttachments = &colorAttachment; // a pointer to them
 	renderPassCreationInfo.subpassCount = 1; // how many subpasses do we want happening
 	renderPassCreationInfo.pSubpasses = &subpass; // a pointer to all of em
+	renderPassCreationInfo.dependencyCount = 1;
+	renderPassCreationInfo.pDependencies = &dependency; // the subpass dependencies
 
 	if(vkCreateRenderPass(device, &renderPassCreationInfo, nullptr, &renderPass) != VK_SUCCESS) {
 		std::cerr << "Failed to create the render pass!\n";
@@ -47,6 +58,8 @@ void vulkan_app::create_render_pass()
 	else {
 		std::cout << "Created the render pass.\n"; 
 	}
+
+
 
 }
 void vulkan_app::clean_render_pass()
