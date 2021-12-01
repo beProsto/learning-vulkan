@@ -1,1 +1,1 @@
-{"std": "c++17", "out": "./bin/main.exe", "incl": ["./include/", "C:/glm/include/", "C:/VulkanSDK/1.2.189.2/Include"], "link": ["./lib/glfw3dll.lib", "C:/VulkanSDK/1.2.189.2/Lib/vulkan-1.lib"], "src": ["./vulkan_app/*.cpp", "./vulkan_app/macro/_/*.cpp", "./vulkan_app/vulkan_app/*.cpp"]}
+{"std": "c++17", "out": "./bin/main.exe", "incl": ["./include/", "C:/VulkanSDK/1.2.189.2/Include"], "link": ["./lib/glfw3dll.lib", "C:/VulkanSDK/1.2.189.2/Lib/vulkan-1.lib"], "src": ["./vulkan_app/*.cpp", "./vulkan_app/macro/_/*.cpp", "./vulkan_app/vulkan_app/*.cpp"]}
