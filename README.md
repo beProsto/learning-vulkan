@@ -9,3 +9,6 @@ I guess this whole thing is just a mental "note to self".
 
 To run:
 `./compile_and_run`
+
+Expected results:
+[!screenshot](screenshot.png)
