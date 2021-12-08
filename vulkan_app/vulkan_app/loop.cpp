@@ -24,15 +24,26 @@ void vulkan_app::begin()
 // drawing :D
 void vulkan_app::draw()
 {
+	// Wait for this frame's fence
+	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
 	// gets the index of the image / framebuffer we should draw to
 	uint32_t imgIndex;
-	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphore, VK_NULL_HANDLE, &imgIndex);
+	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imgIndex);
+
+	// Check if a previous frame is using this image (i.e. there is its fence to wait on)
+	if(imagesInFlight[imgIndex] != VK_NULL_HANDLE) {
+		vkWaitForFences(device, 1, &imagesInFlight[imgIndex], VK_TRUE, UINT64_MAX);
+	}
+	// Mark the image as now being in use by this frame
+	imagesInFlight[imgIndex] = inFlightFences[currentFrame];
+
 
 	// submit info
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	// specifies for which semaphores to wait on before execution begins
-	VkSemaphore waitSemaphores[] = {imageAvailableSemaphore};
+	VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]};
 	VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
 	submitInfo.waitSemaphoreCount = 1;
 	submitInfo.pWaitSemaphores = waitSemaphores;
@@ -41,11 +52,13 @@ void vulkan_app::draw()
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = &commandBuffers[imgIndex]; // now depending on the currently available image, we choose the framebuffer and the command buffer
 	// which semaphore to signal upon ending
-	VkSemaphore signalSemaphores[] = {renderFinishedSemaphore};
+	VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signalSemaphores;
 
-	if(vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
+    vkResetFences(device, 1, &inFlightFences[currentFrame]);
+
+	if(vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
 		std::cerr << "Couldn't submit a queue!!!\n";
 		_ASSERT(false);
 	}
@@ -66,5 +79,6 @@ void vulkan_app::draw()
 
 	vkQueuePresentKHR(presentQueue, &presentInfo);
 
-	vkQueueWaitIdle(presentQueue);
+	// change current image
+	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT; 
 }
